@@ -1,41 +1,43 @@
 package com.curso.blog.controller;
 
 import com.curso.blog.dto.HelloRequest;
-import org.springframework.stereotype.Controller;
+import com.curso.blog.model.Blog;
+import com.curso.blog.service.BlogService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/blog")
 public class BlogController {
 
-    @GetMapping("/blog/hi/{name}")
-    //@RequestMapping(method = RequestMethod.GET, value = "/blog/hi")
-    public String hello(@PathVariable String name) {
-        return "Hello " + name;
-    }
+    @Autowired
+    private BlogService blogService;
 
-    @GetMapping("/blog/hi")
-    //@RequestMapping(method = RequestMethod.GET, value = "/blog/hi")
-    public String helloWithParameters(@RequestParam(value = "nombre", required = false) String name,
-                                      @RequestParam Integer age) {
-        return "Hello " + name + ", Age: " + age;
-    }
+    // localhost/blog?blogId=123&name=Hola
+    @GetMapping("/find")
+    public ResponseEntity findBlog(@RequestParam(required = false) Long blogId,
+                                   @RequestParam(required = false) String name) {
 
-    @PostMapping("/hello/map")
-    public String helloWithBodyMap(@RequestBody Map<String, Object> values) {
+        try {
 
-        if (values.containsKey("name")) {
-            return "Hello " + values.get("name");
+            Blog blog = blogService.findBlog(blogId, name);
+
+            // RestTemplate -> ResponseEntity
+            //return ResponseEntity.status(HttpStatus.OK).body(blog);
+            //return new ResponseEntity<>(blog, HttpStatus.OK);
+            return ResponseEntity.ok(blog);
+
+        } catch (Exception ex) {
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(ex.getMessage());
         }
 
-        return "Hello Unknown";
-    }
-
-    @PostMapping("/hello/object")
-    public String helloWithBodyObject(@Valid @RequestBody HelloRequest helloRequest) {
-        return "Hello " + helloRequest.getName() + ", Age: " + helloRequest.getAge();
     }
 
 }
