@@ -24,7 +24,7 @@ public class Blog {
     @Column(name = "name", unique = true, length = 100, nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "blog")
+    @OneToMany(mappedBy = "blog", fetch = FetchType.LAZY)
     private List<Post> posts;
 
 }
