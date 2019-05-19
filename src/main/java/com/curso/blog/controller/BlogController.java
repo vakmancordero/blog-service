@@ -1,15 +1,12 @@
 package com.curso.blog.controller;
 
-import com.curso.blog.dto.HelloRequest;
+import com.curso.blog.dto.BlogCreateRequest;
 import com.curso.blog.model.Blog;
 import com.curso.blog.service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/blog")
@@ -38,6 +35,11 @@ public class BlogController {
                     .body(ex.getMessage());
         }
 
+    }
+
+    @PostMapping
+    public ResponseEntity createBlog(@RequestBody BlogCreateRequest blog) {
+        return ResponseEntity.ok(blogService.createBlog(blog));
     }
 
 }

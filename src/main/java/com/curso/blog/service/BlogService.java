@@ -1,5 +1,6 @@
 package com.curso.blog.service;
 
+import com.curso.blog.dto.BlogCreateRequest;
 import com.curso.blog.model.Blog;
 import com.curso.blog.repository.BlogRepository;
 
@@ -38,6 +39,15 @@ public class BlogService {
         } else {
             throw new Exception("El blog con el id: " + blogId + " no existe");
         }
+
+    }
+
+    public Blog createBlog(BlogCreateRequest blog) {
+
+        Blog blogEntity = new Blog();
+        blogEntity.setName(blog.getName());
+
+        return blogRepository.save(blogEntity);
     }
 
 }
